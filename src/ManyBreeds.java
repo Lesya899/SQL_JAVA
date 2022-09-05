@@ -4,8 +4,6 @@
 import java.sql.*;
 
 public class ManyBreeds {
-    public static final String DB_URL = "jdbc:sqlite:My_cats.db";
-    public static final String DB_Driver = "org.sqlite.JDBC";
     public static Connection connection;
     public static Statement statement;
     static String[] types = new String[]{"Абиссинская кошка",
@@ -71,33 +69,24 @@ public class ManyBreeds {
             "Японский бобтейл"
     };
 
-    static {
-        try {
-            //устанавливаем соединение с СУБД. По переданному адресу, JDBC сама определит тип и местоположение нашей СУБД
-            // и вернёт Connection, который мы можем использовать для связи с БД
-            connection = DriverManager.getConnection(DB_URL);
-        } catch (SQLException exp) {
-            exp.printStackTrace();
-        }
+    //подключаемся к БД
+    static void connectDataBase() throws ClassNotFoundException, SQLException {
+        //проверяем наличие JDBC драйвера для работы с БД
+        Class.forName("org.sqlite.JDBC");
+        //устанавливаем соединение с СУБД. По переданному адресу, JDBC сама определит тип и местоположение нашей СУБД
+        // и вернёт Connection, который мы можем использовать для связи с БД
+        connection = DriverManager.getConnection("jdbc:sqlite:My_cats.db");
     }
 
-    static {
-        try {
-            statement = connection.createStatement();
-        } catch (SQLException exp) {
-            exp.printStackTrace();
-        }
-    }
-//метод добавляет все породы кошек из массива
+    //метод добавляет все породы кошек из массива
     static void addAllTypes(String[] types) throws SQLException {
+        statement = connection.createStatement();
         for (String t : types) {
             statement.execute("INSERT INTO types (type) VALUES ('" + t + "')");
         }
     }
-
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        //проверяем наличие JDBC драйвера для работы с БД
-        Class.forName(DB_Driver);
+        ManyBreeds.connectDataBase();
         ManyBreeds.addAllTypes(ManyBreeds.types);
     }
 }
