@@ -26,6 +26,8 @@ public class InsertSecondTable {
     static void insertType(String type) throws SQLException {
         statement.execute("INSERT INTO types ('type') VALUES ('" + type + "')");
     }
+
+    //метод добавляет кошку
     static void insertCat(String name, String type, int age, Double weight) throws SQLException {
         int id;
         if (!getType(type).isBeforeFirst()) { //если типа нет
@@ -34,6 +36,7 @@ public class InsertSecondTable {
         id = getType(type).getInt("id");
         statement.execute("INSERT INTO cats ('name', 'type_id', 'age', 'weight') VALUES ('" + name + "', " + id + ", " + age + ", " + weight + ")");
     }
+
     //ResultSet предназначен для работы с таблицей данных, полученной в результате обработки запроса
     static ResultSet getType(String type) throws SQLException {
         return statement.executeQuery("SELECT * FROM types WHERE type = '" + type + "'");
